@@ -3,7 +3,7 @@ const app = express()
 const port = process.env.PORT || 4000
 const package = require('./package.json')
 var jwt = require('jsonwebtoken');
-const { userSchema } = require('./models');
+const { userSchema, categorySchema, productSchema, quantitySchema, orderSchema } = require('./models');
 
 //Cookie-parser
 const cookieParser = require('cookie-parser')
@@ -28,12 +28,24 @@ class HttpError extends Error {
     }
 }
 
+//Logger
+const myLogger = function (req, res, next) {
+  console.log(`${req.method} ${req.url} ${req.headers['user-agent']} `)
+  next()
+}
+app.use(myLogger)
+
 //mongo Db
 const mongoose = require('mongoose');
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('Db Connected!'))
     .catch(e => console.error(`Db Connection error: ${e.message}`));
-const Users = mongoose.model('Users', userSchema);
+const User = mongoose.model('User', userSchema);
+const Category = mongoose.model('Category', categorySchema);
+const Product = mongoose.model('Product', productSchema);
+const Quantity = mongoose.model('Quantity', quantitySchema);
+const Order = mongoose.model('Order', orderSchema);
+ 
 
 //bcrypt
 const bcrypt = require('bcrypt');
@@ -52,13 +64,13 @@ app.post('/register', async (req, res, next) => {
     
     const username = name?.toLowerCase()?.replaceAll(' ', '')
 
-    const user = await Users.findOne({username: username})
+    const user = await User.findOne({username: username})
     if (user) {
         next(new HttpError('User already exists', 409))
     } else {
         const salt = bcrypt.genSaltSync(saltRounds);
         const hash = bcrypt.hashSync(password, salt);
-        const newUser = new Users({name: name, username: username, password: hash, email: email})
+        const newUser = new User({name: name, username: username, password: hash, email: email})
         await newUser.save()
         res.json({
             message: `Welcome ${newUser.name}. Your Username is ${newUser.username} , which you can use for login.`
@@ -68,8 +80,7 @@ app.post('/register', async (req, res, next) => {
 
 app.post('/login', async (req, res, next) => {
     const {username, password} = req.body
-    //const user = users.find(u => u.name === username && u.password === password)
-    const user = await Users.findOne({username: username})
+    const user = await User.findOne({username: username})
     if (user) {
         if(bcrypt.compareSync(password, user.password)) {
             
@@ -80,10 +91,11 @@ app.post('/login', async (req, res, next) => {
                     username: user.username,
                     email: user.email,
                     doj: user.doj,
+                    isAdmin: user.isAdmin
                 }
             }, process.env.JWT_SECRET);
 
-            res.cookie('token', token, { httpOnly: true , secure: true, path: '/'});
+            res.cookie('token', token, { httpOnly: true , path: '/'});
             res.session = {token: token}
             res.json({
                 message: `Welcome ${user.name}`,
@@ -98,6 +110,7 @@ app.post('/login', async (req, res, next) => {
     } 
 })
 
+
 app.get('/user-info', (req, res, next) => {
     const token = req.headers.authorization?.split(' ')[1]
     if (token) {
@@ -105,60 +118,135 @@ app.get('/user-info', (req, res, next) => {
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
             res.json(decoded?.data)
         } catch(err) {
-            next(new HttpError('Invalid Token', 403))
+            next(new HttpError(err.message, 403))
         }
     } else {
         next(new HttpError('authorization header missing', 403))
     }
 })
 
+
 app.route('/products')
-  .get((req, res) => {
-    res.json({})
+  .get((req, res, next) => {
+
+    Product.find().then((product) => {
+        res.json(product)
+    }).catch((err) => {
+        next(new HttpError(err.message, 500))
+    })
   })
-  .post((req, res) => {
-    res.json(req.body)
+  .post((req, res, next) => {
+    const {name, description, price, category} = req.body
+    const newProduct = new Product({name: name, description: description, price: price, category: category, tags: []})
+    newProduct.save().then((product) => {
+        res.json(product)
+    }).catch((err) => {
+        next(new HttpError(err.message, 500))
+    })
   })
 
-  app.route('/products/:id')
-  .get((req, res) => {
-    res.json({})
+
+app.route('/products/:id')
+  .get((req, res, next) => {
+    Product.findById(req.params.id).then((product) => {
+        res.json(product)
+    }).catch((err) => {
+        next(new HttpError(err.message, 404))
+    })
   })
-  .put((req, res) => {
-    res.json(req.body)
+  .put((req, res, next) => {
+    const {name, description, price, category} = req.body
+    Product
+      .findByIdAndUpdate(req.params.id, {name: name, description: description, price: price, category: category, tags: []}, {new: true})
+      .then((product) => {
+        res.json(product)
+      }).catch((err) => {
+        next(new HttpError(err.message, 404))
+    })
   })
-  .delete((req, res) => {
-    res.json({})
+  .delete((req, res, next) => {
+    Product.findByIdAndDelete(req.params.id).then((product) => {
+        res.json(product)
+    }).catch((err) => {
+        next(new HttpError(err.message, 404))
+    })
   })
 
 
-app.route('/categories')
-  .get((req, res) => {
-    res.json({})
+app.route('/category')
+  .get((req, res, next) => {
+    Category.find().then((category) => {
+        res.json(category)
+    }).catch((err) => {
+        next(new HttpError(err.message, 500))
+    })
   })
-  .post((req, res) => {
-    res.json(req.body)
+  .post((req, res, next) => {
+    const {name, description} = req.body
+    const newCategory = new Category({name: name, description: description})
+    newCategory.save().then((category) => {
+        res.json(category)
+    }).catch((err) => {
+        next(new HttpError(err.message, 500))
+    })
   })
 
-app.route('/categories/:id')
-  .get((req, res) => {
-    res.json({})
+app.route('/category/:id')
+  .get((req, res, next) => {
+    Category.findById(req.params.id).then((category) => {
+        res.json(category)
+    }).catch((err) => {
+        next(new HttpError(err.message, 404))
+    })
+   })
+  .put((req, res, next) => {
+    const {name, description} = req.body
+    Category
+      .findByIdAndUpdate(req.params.id, {name: name, description: description}, {new: true})
+      .then((category) => {
+        res.json(category)
+      }).catch((err) => {
+        next(new HttpError(err.message, 404))
+    })
   })
-  .put((req, res) => {
-    res.json(req.body)
-  })
-  .delete((req, res) => {
-    res.json({})
+  .delete((req, res, next) => {
+    Category.findByIdAndDelete(req.params.id).then((category) => {
+        res.json(category)
+    }).catch((err) => {
+        next(new HttpError(err.message, 404))
+    })
   })
 
+
+  app.route('/test/:user_id')
+    .all((req, res, next) => {
+    // runs for all HTTP verbs first
+    // think of it as route specific middleware!
+      next()
+    })
+    .get((req, res, next) => {
+      res.json(req.user)
+    })
+    .put((req, res, next) => {
+    // just an example of maybe updating the user
+      req.user.name = req.params.name
+      // save user ... etc
+      res.json(req.user)
+    })
+    .post((req, res, next) => {
+      next(new Error('not implemented'))
+    })
+    .delete((req, res, next) => {
+      next(new Error('not implemented'))
+    })
 
 
 //Generic error handler Middleware
 app.use((error, req, res, next) => {
-    console.log('Path: ', req.path)
-    console.error('ErrorType: ', error.type)
-    console.error('Error: ', error.message)
-    res.status(error?.statusCode).json({ error: error?.message })
+  console.log('Path: ', req.path)
+  console.error('ErrorMessage: ', error.message)
+  console.error('Error: ', error)
+  res.status(error?.statusCode).json({ error: error?.message })
 })
 
 app.listen(port, () => {
