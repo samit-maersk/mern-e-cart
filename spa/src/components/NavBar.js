@@ -27,6 +27,16 @@ const NavBar = () => {
                                 <i className="bi bi-house h4"></i>
                             </Link>
                         </li>
+                        <li className="nav-item">
+                            <Link className="nav-link active" aria-current="page" to="/category">
+                                category
+                            </Link>
+                        </li>
+                        <li className="nav-item">
+                            <Link className="nav-link active" aria-current="page" to="/product">
+                                product
+                            </Link>
+                        </li>
                     </ul>
                     
                     {/* <form className="d-flex" role="search">

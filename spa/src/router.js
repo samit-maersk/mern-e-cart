@@ -6,6 +6,9 @@ import App from "./App";
 import Error from "./pages/Error";
 import NotFound from "./pages/NotFound";
 import Profile from "./pages/Profile";
+import Category from "./pages/Category";
+import Product from "./pages/Product";
+import Cart from "./pages/Cart";
 const router = createBrowserRouter([
     {
       path: "/",
@@ -27,6 +30,27 @@ const router = createBrowserRouter([
         {
           path: "/profile",
           element: <Profile />,
+        },
+        {
+          path: "/category",
+          element: <Category />,
+        },
+        {
+          path: "/category/:id",
+          element: <Category />,
+        },
+        ,
+        {
+          path: "/product",
+          element: <Product />,
+        },
+        {
+          path: "/product/:id",
+          element: <Product />,
+        },
+        {
+          path: "/cart",
+          element: <Cart />,
         },
         {
             path: "*",
