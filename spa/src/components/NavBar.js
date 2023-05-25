@@ -1,9 +1,18 @@
 import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-
+import { logout } from '../redux/authSlice';
+import { useNavigate } from "react-router-dom";
 const NavBar = () => {
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const user = useSelector((state) => state.auth.user);
 
-    
+    const handleLogout = () => {
+        dispatch(logout())
+        navigate("/")
+    }
+
     return (
         <nav className="navbar bg-primary navbar-expand-lg bg-body-tertiary">
             <div className="container-fluid">
@@ -19,19 +28,29 @@ const NavBar = () => {
                             </Link>
                         </li>
                     </ul>
+                    
                     {/* <form className="d-flex" role="search">
                         <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
                         <button className="btn btn-outline-success" type="submit">Search</button>
                     </form> */}
                     
                     <ul className="navbar-nav">
+                        {user && user.name ? (
+                            <li className="nav-item">
+                                <a href='#' className="nav-link" onClick={handleLogout}>
+                                    logout
+                                </a>
+                            </li>
+                            
+                        ) : (
+                            <li className="nav-item">
+                                <Link className="nav-link" to="/login">
+                                    login
+                                </Link>
+                            </li>
+                        )}
                         
-                        <li className="nav-item">
-                            <Link className="nav-link" to="/login">
-                                login
-                            </Link>
-                        </li>
-                        <li className="nav-item">
+                        {/* <li className="nav-item">
                             <Link className="nav-link" to="/register">
                                 register
                             </Link>
@@ -40,7 +59,8 @@ const NavBar = () => {
                             <Link className="nav-link" to="/favorite">
                                 <i className="bi bi-heart h4"></i>
                             </Link>
-                        </li>
+                        </li> */}
+
                         <li className="nav-item">
                             <Link className="nav-link" to="/cart">
                                 <i className="bi bi-cart h4"></i>

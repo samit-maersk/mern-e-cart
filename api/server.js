@@ -95,11 +95,12 @@ app.post('/login', async (req, res, next) => {
                 }
             }, process.env.JWT_SECRET);
 
-            res.cookie('token', token, { httpOnly: true , path: '/'});
+            res.cookie('accessToken', token, { httpOnly: true , path: '/'});
             res.session = {token: token}
             res.json({
                 message: `Welcome ${user.name}`,
-                token: token
+                accessToken: token,
+                refreshToken: 'refreshToken'
             })
         } else {
             next(new HttpError('Login failed', 401))

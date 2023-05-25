@@ -20,7 +20,7 @@ const Register = () => {
               <input type="password" className="form-control" id="password" />
             </div>
             <div className="text-center">
-              <button type="submit" className="btn btn-primary">Login</button>
+              <button type="submit" className="btn btn-primary">Register</button>
             </div>
           </form>
       </div>

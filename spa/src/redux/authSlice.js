@@ -4,12 +4,18 @@ import axios from '../axios'
 export const login = createAsyncThunk(
   "auth/login",
   async ({ payload, navigate ,toast}) => {
-    console.log(payload)
-    axios.post('/login', payload)
+    return axios.post('/login', payload)
       .then(res => {
         toast.success(res.data.message);
-        navigate("/");
-        localStorage.setItem('token', res.data.token)
+        localStorage.setItem('accessToken', res.data.accessToken)
+        localStorage.setItem('refreshToken', res.data.refreshToken)
+        return res.data
+      })
+      .then(data => {
+        return axios.get('/user-info')
+      })
+      .then(res => {
+        navigate('/', { state: { isLoggedIn: true } })
         return res.data
       })
       .catch(err => {
@@ -19,19 +25,18 @@ export const login = createAsyncThunk(
   }
 );
 
-export const userInfo = createAsyncThunk(
-  "auth/userInfo",
-  async ({ toast}) => {
-    axios.get('/user-info')
-      .then(res => {
-        return res.data
-      })
-      .catch(err => {
-        toast.error(err.message);
-        return err.response.data
-      })
-  }
-);
+// export const userInfo = createAsyncThunk(
+//   "auth/userInfo",
+//   async () => {
+//     return axios.get('/user-info')
+//       .then(res => {
+//         return res.data
+//       })
+//       .catch(err => {
+//         return err.response.data
+//       })
+//   }
+// );
 
 const initialState = {
   user: {},
@@ -44,6 +49,8 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     logout: (state, action) => {
+      localStorage.removeItem('accessToken')
+      localStorage.removeItem('refreshToken')
       state.user = {}
     },
   },
@@ -53,24 +60,26 @@ export const authSlice = createSlice({
         state.loading = true;
       })
       .addCase(login.fulfilled, (state, action) => {
+        console.log(action.payload)
         state.loading = false;
+        state.user = action.payload
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       })
       
-      .addCase(userInfo.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(userInfo.fulfilled, (state, action) => {
-        state.loading = false;
-        state.user = action.payload
-      })
-      .addCase(userInfo.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message;
-      })
+      // .addCase(userInfo.pending, (state) => {
+      //   state.loading = true;
+      // })
+      // .addCase(userInfo.fulfilled, (state, action) => {
+      //   state.loading = false;
+      //   state.user = action.payload
+      // })
+      // .addCase(userInfo.rejected, (state, action) => {
+      //   state.loading = false;
+      //   state.error = action.error.message;
+      // })
   },
 })
 

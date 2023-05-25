@@ -1,12 +1,12 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { toast } from 'react-toastify';
 import { login } from '../redux/authSlice';
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const dispatch = useDispatch()
-  const count = useSelector((state) => state.auth.user) 
+  const user = useSelector((state) => state.auth.user) 
   const navigate = useNavigate();
 
   const [payload, setPayload] = useState({
@@ -20,7 +20,6 @@ const Login = () => {
   
   const onSubmit = (e) => {
     e.preventDefault()
-    console.log(payload)
     dispatch(login({ payload, navigate, toast }))
   }
 
@@ -39,6 +38,11 @@ const Login = () => {
             </div>
             <div className="text-center">
               <button type="submit" className="btn btn-primary">Login</button>
+            </div>
+            <div className="text-center mt-3">
+              <Link className="nav-link" to="/register" style={{color: "blue"}}>
+                  Don't have access ?, Please Register...
+              </Link>
             </div>
           </form>
       </div>
