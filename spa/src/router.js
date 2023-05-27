@@ -9,6 +9,8 @@ import Profile from "./pages/Profile";
 import Category from "./pages/Category";
 import Product from "./pages/Product";
 import Cart from "./pages/Cart";
+import CategoryDetails from "./pages/CategoryDetails";
+import CategoryLayout from "./pages/CategoryLayout";
 const router = createBrowserRouter([
     {
       path: "/",
@@ -33,20 +35,27 @@ const router = createBrowserRouter([
         },
         {
           path: "/category",
-          element: <Category />,
+          element: <CategoryLayout />,
+          children: [
+            {
+              path: "",
+              element: <Category />,
+            },
+            {
+              path: ":id",
+              element: <CategoryDetails />,
+            },
+          ],
         },
-        {
-          path: "/category/:id",
-          element: <Category />,
-        },
-        ,
         {
           path: "/product",
           element: <Product />,
-        },
-        {
-          path: "/product/:id",
-          element: <Product />,
+          children: [
+            {
+              path: ":id",
+              element: <Product />,
+            },
+          ],
         },
         {
           path: "/cart",

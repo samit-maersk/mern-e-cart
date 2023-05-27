@@ -13,8 +13,8 @@ const Home = () => {
   
   return (
     <div>
-      <h3>Welcome {user ? user.name : 'UNKNOWN'}!</h3>
-      <Category />
+      <h3>Welcome {user && user.name? user.name : 'UNKNOWN'}!</h3>
+      
     </div>
     
   )

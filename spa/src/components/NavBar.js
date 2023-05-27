@@ -1,10 +1,11 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { logout } from '../redux/authSlice';
 import { useNavigate } from "react-router-dom";
 const NavBar = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const dispatch = useDispatch();
     const user = useSelector((state) => state.auth.user);
 
@@ -28,12 +29,12 @@ const NavBar = () => {
                             </Link>
                         </li>
                         <li className="nav-item">
-                            <Link className="nav-link active" aria-current="page" to="/category">
+                            <Link className="nav-link" aria-current="page" to="/category">
                                 category
                             </Link>
                         </li>
                         <li className="nav-item">
-                            <Link className="nav-link active" aria-current="page" to="/product">
+                            <Link className="nav-link" aria-current="page" to="/product">
                                 product
                             </Link>
                         </li>
@@ -51,7 +52,6 @@ const NavBar = () => {
                                     logout
                                 </a>
                             </li>
-                            
                         ) : (
                             <li className="nav-item">
                                 <Link className="nav-link" to="/login">
@@ -60,6 +60,14 @@ const NavBar = () => {
                             </li>
                         )}
                         
+                        {user && user.isAdmin ? (
+                            <li className="nav-item">
+                                <Link className="nav-link" to="/admin">
+                                    admin
+                                </Link>
+                            </li>
+                        ):(<></>)}
+
                         {/* <li className="nav-item">
                             <Link className="nav-link" to="/register">
                                 register
