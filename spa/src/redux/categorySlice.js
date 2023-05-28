@@ -1,70 +1,37 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from '../axios'
 
-const db = [
-  {
-    "_id": "646cd49393feab804681bce7",
-    "name": "Beverage",
-    "description": "Beverage safasfasfsfasfasfasfas a sfa sf asf asf asf asf asf as ",
-    "__v": 0
-  },
-  {
-      "_id": "646cd4a493feab804681bce9",
-      "name": "Bakery",
-      "description": "Bakery",
-      "__v": 0
-  },
-  {
-      "_id": "646cd4b093feab804681bceb",
-      "name": "Nonfood & Pharmacy",
-      "description": "Nonfood & Pharmacy",
-      "__v": 0
-  },
-  {
-    "_id": "646cd4a493feab804681bce9",
-    "name": "Bakery",
-    "description": "Bakery",
-    "__v": 0
-},
-{
-    "_id": "646cd4b093feab804681bceb",
-    "name": "Nonfood & Pharmacy",
-    "description": "Nonfood & Pharmacy",
-    "__v": 0
-}
-];
-
 export const allCategory = createAsyncThunk(
   "category/all",
-  () => {
-    return Promise.all(db);
+  async () => {
+    return axios.get('/category').then((res) => res.data).catch((err) => err);
   }
 );
 
 export const addCategory = createAsyncThunk(
   "category/add",
-  (payload) => {
-    return Promise.resolve(payload);
+  async (payload) => {
+    return axios.post('/category', payload).then((res) => res.data).catch((err) => err);
   }
 );
 
 export const updateCategory = createAsyncThunk(
   "category/update",
-  (payload) => {
-    return Promise.resolve(payload);
+  async (payload) => {
+    return axios.put(`/category/${payload.id}`, payload.data).then((res) => res.data).catch((err) => err);
   }
 );
 
 export const deleteCategory = createAsyncThunk(
   "category/delete",
-  (id) => {
-    return Promise.resolve(id);
+  async (id) => {
+    return axios.delete(`/category/${id}`).then((res) => id).catch((err) => err);
   }
 );
 
 const initialState = {
   data: [],
-  error: {},
+  error: {status: false, message: ''},
   loading: false,
 }
 
@@ -85,7 +52,7 @@ export const categorySlice = createSlice({
       })
       .addCase(allCategory.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = {status: true, message: action.error.message};
       })
       //create
       .addCase(addCategory.pending, (state) => {
@@ -97,7 +64,7 @@ export const categorySlice = createSlice({
       })
       .addCase(addCategory.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = {status: true, message: action.error.message};
       })
       //update
       .addCase(updateCategory.pending, (state) => {
@@ -105,12 +72,12 @@ export const categorySlice = createSlice({
       })
       .addCase(updateCategory.fulfilled, (state, action) => {
         state.loading = false;
-        const index = state.data.findIndex((item) => item._id === action.payload)
+        const index = state.data.findIndex((item) => item._id === action.payload.id)
         if(index !== -1) state.data[index] = action.payload
       })
       .addCase(updateCategory.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = {status: true, message: action.error.message};
       })
       //delete
       .addCase(deleteCategory.pending, (state) => {
@@ -122,7 +89,7 @@ export const categorySlice = createSlice({
       })
       .addCase(deleteCategory.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = {status: true, message: action.error.message};
       })
   }
 })

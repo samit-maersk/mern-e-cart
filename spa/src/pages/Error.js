@@ -3,9 +3,8 @@ import React from 'react'
 const Error = () => {
     
     return (
-        <div>
-            <h1>Error Page</h1>
-            <p>Oops! Something went wrong.</p>
+        <div className="alert alert-danger" role="alert">
+            Oops! Something went wrong.
         </div>
     )
 }

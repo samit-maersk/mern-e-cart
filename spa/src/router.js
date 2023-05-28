@@ -1,4 +1,4 @@
-import { createBrowserRouter,RouterProvider } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
@@ -6,11 +6,12 @@ import App from "./App";
 import Error from "./pages/Error";
 import NotFound from "./pages/NotFound";
 import Profile from "./pages/Profile";
-import Category from "./pages/Category";
-import Product from "./pages/Product";
+import Product from "./pages/product/Product";
 import Cart from "./pages/Cart";
-import CategoryDetails from "./pages/CategoryDetails";
-import CategoryLayout from "./pages/CategoryLayout";
+import CategoryDetails from "./pages/category/CategoryDetails";
+import CategoryLayout from "./pages/category/CategoryLayout";
+import CategoryNewUpdate from "./pages/category/CategoryNewUpdate";
+import Categories from "./pages/category/Categories";
 const router = createBrowserRouter([
     {
       path: "/",
@@ -36,15 +37,20 @@ const router = createBrowserRouter([
         {
           path: "/category",
           element: <CategoryLayout />,
+          errorElement: <Error />,
           children: [
             {
               path: "",
-              element: <Category />,
+              element: <Categories />,
             },
             {
               path: ":id",
               element: <CategoryDetails />,
             },
+            {
+              path: "new",
+              element: <CategoryNewUpdate />,
+            }
           ],
         },
         {

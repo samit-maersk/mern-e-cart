@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import Category from './Category'
+import Category from './category/Category'
 import Pagination from '../components/Pagination'
 import { useDispatch, useSelector } from 'react-redux';
 import { userInfo } from '../redux/authSlice';
