@@ -1,11 +1,9 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { addCategory } from '../../redux/categorySlice'
 import { useNavigate } from 'react-router-dom'
+import { addCategory } from '../../redux/categorySlice'
 
-
-const CategoryNewUpdate = () => {
-
+const CategoryForm = () => {
     const [category, setCategory] = useState({
         name: '',
         description: ''
@@ -46,4 +44,4 @@ const CategoryNewUpdate = () => {
     )
 }
 
-export default CategoryNewUpdate
+export default CategoryForm

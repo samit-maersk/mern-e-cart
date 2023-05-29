@@ -1,15 +1,21 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 
-const Card = ({item, isAdmin, handleDelete, handleEdit, isCartItem=false}) => {
+const Card = ({item={}, isAdmin=false, handleDelete=()=>{}, handleEdit=()=>{}, viewMore=()=>{}, isCartItem=false}) => {
+  
+  const category = useSelector((state) => state.category.data.find((cat) => cat._id === item?.category))
+
   return (
       <div className="card h-100">
           <img src="./logo192.png" className="card-img-top" alt="..." style={{width: "50%"}}/>
           <div className="card-body">
-              <h5 className="card-title">{item?.name}</h5>
+              <h5 className="card-title">{item?.name}</h5> 
               <p className="card-text">{item?.description}</p>
-
+              <hr />
               {isCartItem && (
                 <>
+                  Category: <a className="card-text" href='#'>{category?.name}</a>
+                  <p className="card-text">Price: {item?.price}</p>
                   <i className="btn bi bi-heart h2"></i>
                   <i className="btn bi bi-cart h2 ms-2"></i>
                 </>
@@ -22,7 +28,7 @@ const Card = ({item, isAdmin, handleDelete, handleEdit, isCartItem=false}) => {
                 </>
               )}
 
-              <i className="btn bi bi-three-dots-vertical h2"></i>
+              <i className="btn bi bi-three-dots-vertical h2" onClick={() => viewMore(item)}></i>
               
           </div>
       </div>

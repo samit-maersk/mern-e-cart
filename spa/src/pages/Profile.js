@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
-import { userInfo } from '../redux/authSlice';
 
 const Profile = () => {
     const user = useSelector((state) => state.auth.user);
@@ -19,10 +17,13 @@ const Profile = () => {
                     </tr>
                 </tbody>
             </table>
-            <div className="d-flex justify-content-center">
-                <button className="btn btn-info">Edit Profile</button>
-                <button className="btn btn-danger">Reset Password</button>
-            </div>
+            {user && (
+                <div className="d-flex justify-content-center">
+                    <button className="btn btn-info">Edit Profile</button>
+                    <button className="btn btn-danger">Reset Password</button>
+                </div>
+            )}
+            
         </div>
     )
 }

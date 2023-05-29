@@ -1,22 +1,19 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { allCategory, deleteCategory } from '../../redux/categorySlice';
+import { deleteCategory } from '../../redux/categorySlice';
 import Category from './Category';
 import Error from '../../components/Error';
 import Spinner from '../../components/Spinner';
+import { useNavigate } from 'react-router-dom';
 
 const Categories = () => {
-
-    const dispatch = useDispatch()
-    
-    // useEffect(() => {
-    //     dispatch(allCategory())
-    // }, [dispatch])
 
     const { data, error, loading } = useSelector((state) => state.category)
     const user = useSelector((state) => state.auth.user);
     const isAdmin = user?.isAdmin
-    
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+
     const handleDelete = (id) => {
         const prompt = window.confirm('Are you sure, You want to delete this item?')
         if (prompt) {
@@ -25,6 +22,10 @@ const Categories = () => {
     }
     
     const handleEdit = (id) => {}
+    const viewMore = (item) => {
+        navigate(`/category/${item._id}`)
+        console.log(item)
+    }
 
     if (loading) {
         return (<Spinner />)
@@ -36,7 +37,7 @@ const Categories = () => {
     
     return (
         <div className='row g-4'>
-            {data && data?.map((item, index) => <Category key={index} item={item} isAdmin={isAdmin} handleDelete={handleDelete} handleEdit={handleEdit} />)}
+            {data && data?.map((item, index) => <Category key={index} item={item} isAdmin={isAdmin} handleDelete={handleDelete} handleEdit={handleEdit} viewMore={viewMore}/>)}
         </div>
     )
     

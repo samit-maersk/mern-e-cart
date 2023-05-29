@@ -7,11 +7,14 @@ import NotFound from "./pages/NotFound";
 import Profile from "./pages/Profile";
 import Product from "./pages/product/Product";
 import Cart from "./pages/Cart";
-import CategoryDetails from "./pages/category/CategoryDetails";
 import CategoryLayout from "./pages/category/CategoryLayout";
-import CategoryNewUpdate from "./pages/category/CategoryNewUpdate";
 import Categories from "./pages/category/Categories";
 import Error from "./components/Error";
+import Products from "./pages/product/Products";
+import ProductLayout from "./pages/product/ProductLayout";
+import ProductForm from "./pages/product/ProductForm";
+import CategoryForm from "./pages/category/CategoryForm";
+import Category from "./pages/category/Category";
 const router = createBrowserRouter([
     {
       path: "/",
@@ -45,21 +48,30 @@ const router = createBrowserRouter([
             },
             {
               path: ":id",
-              element: <CategoryDetails />,
+              element: <Category />,
             },
             {
               path: "new",
-              element: <CategoryNewUpdate />,
+              element: <CategoryForm />,
             }
           ],
         },
         {
           path: "/product",
-          element: <Product />,
+          element: <ProductLayout />,
+          errorElement: <Error />,
           children: [
+            {
+              path: "",
+              element: <Products />,
+            },
             {
               path: ":id",
               element: <Product />,
+            },
+            {
+              path: "new",
+              element: <ProductForm />,
             },
           ],
         },

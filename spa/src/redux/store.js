@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 import authReducer, { userInfo } from './authSlice'
 import categoryReducer, { allCategory } from './categorySlice'
-import productReducer from './productSlice'
+import productReducer, { allProduct } from './productSlice'
 
 export const store = configureStore({
   reducer: {
@@ -12,5 +12,5 @@ export const store = configureStore({
 })
 
 store.dispatch(userInfo())
-
 store.dispatch(allCategory())
+store.dispatch(allProduct())
