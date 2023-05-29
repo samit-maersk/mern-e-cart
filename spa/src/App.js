@@ -12,12 +12,12 @@ function App() {
       <header>
         <NavBar />
       </header>
-      <article className="d-flex p-2">
+      <article className='m-5'>
         <Outlet />
       </article>
-      <footer>
+      <footer className='m-10'>
         <ToastContainer />
-        <hr/>
+        
         <Footer />
       </footer>
     </div>

@@ -37,7 +37,7 @@ app.use(myLogger)
 
 //mongo Db
 const mongoose = require('mongoose');
-mongoose.connect(process.env.MONGO_URI)
+mongoose.connect(process.env.MONGO_URI,{serverSelectionTimeoutMS: 1000})
     .then(() => console.log('Db Connected!'))
     .catch(e => console.error(`Db Connection error: ${e.message}`));
 const User = mongoose.model('User', userSchema);

@@ -3,7 +3,6 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
 import App from "./App";
-import Error from "./pages/Error";
 import NotFound from "./pages/NotFound";
 import Profile from "./pages/Profile";
 import Product from "./pages/product/Product";
@@ -12,6 +11,7 @@ import CategoryDetails from "./pages/category/CategoryDetails";
 import CategoryLayout from "./pages/category/CategoryLayout";
 import CategoryNewUpdate from "./pages/category/CategoryNewUpdate";
 import Categories from "./pages/category/Categories";
+import Error from "./components/Error";
 const router = createBrowserRouter([
     {
       path: "/",

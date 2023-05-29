@@ -18,29 +18,29 @@ export const login = createAsyncThunk(
         navigate('/', { state: { isLoggedIn: true } })
         return res.data
       })
-      .catch(err => {
-        toast.error(`Login Failed ${err.message}`);
-        return err.response.data
-      })
+      // .catch(err => {
+      //   toast.error(`Login Failed ${err.message}`);
+      //   return err.response.data
+      // })
   }
 );
 
-// export const userInfo = createAsyncThunk(
-//   "auth/userInfo",
-//   async () => {
-//     return axios.get('/user-info')
-//       .then(res => {
-//         return res.data
-//       })
-//       .catch(err => {
-//         return err.response.data
-//       })
-//   }
-// );
+export const userInfo = createAsyncThunk(
+  "auth/userInfo",
+  async () => {
+    return axios.get('/user-info')
+      .then(res => {
+        return res.data
+      })
+      // .catch(err => {
+      //   return err.response.data
+      // })
+  }
+);
 
 const initialState = {
   user: {},
-  error: {},
+  error: null,
   loading: false,
 }
 
@@ -68,17 +68,17 @@ export const authSlice = createSlice({
         state.error = action.error.message;
       })
       
-      // .addCase(userInfo.pending, (state) => {
-      //   state.loading = true;
-      // })
-      // .addCase(userInfo.fulfilled, (state, action) => {
-      //   state.loading = false;
-      //   state.user = action.payload
-      // })
-      // .addCase(userInfo.rejected, (state, action) => {
-      //   state.loading = false;
-      //   state.error = action.error.message;
-      // })
+      .addCase(userInfo.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(userInfo.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload
+      })
+      .addCase(userInfo.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
   },
 })
 
