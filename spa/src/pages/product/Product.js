@@ -1,7 +1,7 @@
 import React from 'react'
 import Card from '../../components/Card';
 
-const Product = ({item, isAdmin, handleDelete, handleEdit}) => {
+const Product = ({item, isAdmin, handleDelete, handleEdit, addToCart, addToFavorite}) => {
     return (
         <div className='col col-md-3'>
             <Card 
@@ -9,7 +9,10 @@ const Product = ({item, isAdmin, handleDelete, handleEdit}) => {
                 isAdmin={isAdmin} 
                 isCartItem={true} 
                 handleDelete={handleDelete} 
-                handleEdit={handleEdit} />
+                handleEdit={handleEdit} 
+                addToCart={addToCart}
+                addToFavorite={addToFavorite}
+                />
         </div>
     )
 }

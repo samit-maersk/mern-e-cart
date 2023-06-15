@@ -1,9 +1,9 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 
-const Card = ({item={}, isAdmin=false, handleDelete=()=>{}, handleEdit=()=>{}, viewMore=()=>{}, isCartItem=false}) => {
+const Card = ({item={}, isAdmin=false, handleDelete=()=>{}, handleEdit=()=>{}, viewMore=()=>{},addToCart=()=>{}, addToFavorite=()=>{}, isCartItem=false}) => {
   
-  const category = useSelector((state) => state.category.data.find((cat) => cat._id === item?.category))
+  const category = useSelector((state) => state.category.data.find((_category) => _category._id === item?.category))
 
   return (
       <div className="card h-100">
@@ -16,8 +16,8 @@ const Card = ({item={}, isAdmin=false, handleDelete=()=>{}, handleEdit=()=>{}, v
                 <>
                   Category: <a className="card-text" href='#'>{category?.name}</a>
                   <p className="card-text">Price: {item?.price}</p>
-                  <i className="btn bi bi-heart h2"></i>
-                  <i className="btn bi bi-cart h2 ms-2"></i>
+                  <i className="btn bi bi-heart h2" onClick={() => addToFavorite(item)}></i>
+                  <i className="btn bi bi-cart h2 ms-2" onClick={() => addToCart(item)}></i>
                 </>
               )}
           

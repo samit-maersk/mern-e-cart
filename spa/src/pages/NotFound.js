@@ -1,9 +1,11 @@
 import React from 'react'
 
-const NotFound = () => {
+const NotFound = ({message="No data found!"}) => {
     
     return (
-        <div>NotFound</div>
+        <div className="alert alert-warning" role="alert">
+            {message}
+        </div>
     )
 }
 

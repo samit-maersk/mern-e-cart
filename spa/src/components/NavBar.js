@@ -8,6 +8,7 @@ const NavBar = () => {
     const location = useLocation();
     const dispatch = useDispatch();
     const user = useSelector((state) => state.auth.user);
+    const cart = useSelector((state) => state.cart.data);
 
     const handleLogout = () => {
         dispatch(logout())
@@ -82,6 +83,7 @@ const NavBar = () => {
                         <li className="nav-item">
                             <Link className="nav-link" to="/cart">
                                 <i className="bi bi-cart h4"></i>
+                                <span className="badge bg-secondary">{cart.length}</span>
                             </Link>
                         </li>
                         <li className="nav-item">

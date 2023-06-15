@@ -4,6 +4,8 @@ import Spinner from '../../components/Spinner';
 import Error from '../../components/Error';
 import { deleteProduct, updateProduct } from '../../redux/productSlice';
 import Product from './Product';
+import NotFound from '../NotFound';
+import { add } from '../../redux/cartSlice';
 
 const Products = () => {
     
@@ -21,13 +23,33 @@ const Products = () => {
 
     const handleEdit = (id) => {};
 
+    const addToCart = (item) => {
+        dispatch(add(item));
+    };
+    
+    const addToFavorite = (item) => {};
+
     if(loading) return <Spinner />
 
     if(error) return <Error message={error}/>
 
+    if(data.length === 0 ) {
+        return <NotFound message={"Product not found!"} />
+    }
+
     return (
         <div className='row g-4'>
-            {data && data?.map((item, index) => <Product key={index} item={item} isAdmin={isAdmin} handleDelete={handleDelete} handleEdit={handleEdit} />)}
+            {data && data?.map((item, index) => {
+                return <Product 
+                    key={index} 
+                    item={item} 
+                    isAdmin={isAdmin} 
+                    handleDelete={handleDelete} 
+                    handleEdit={handleEdit} 
+                    addToCart={addToCart} 
+                    addToFavorite={addToFavorite}/>
+                })
+            }
         </div>
     )
 }

@@ -5,6 +5,7 @@ import Category from './Category';
 import Error from '../../components/Error';
 import Spinner from '../../components/Spinner';
 import { useNavigate } from 'react-router-dom';
+import NotFound from '../NotFound';
 
 const Categories = () => {
 
@@ -33,7 +34,12 @@ const Categories = () => {
     
     if(error) {
         return <Error message={error} />
-    } 
+    }
+
+    if(data.length === 0 ) {
+        return <NotFound message={"Category not found!"} />
+    }
+
     
     return (
         <div className='row g-4'>

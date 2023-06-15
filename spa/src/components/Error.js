@@ -4,7 +4,7 @@ const Error = ({message}) => {
     
     return (
         <div className="alert alert-danger" role="alert">
-            <p>Oops! Something went wrong.</p>
+            <h3>Oops!</h3>
             <hr/>
             {message && <p>{message}</p>}
         </div>
